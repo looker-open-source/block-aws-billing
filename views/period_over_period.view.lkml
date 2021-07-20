@@ -41,7 +41,7 @@ view: +aws_billing {
     view_label: "Period over Period"
     type: number
     hidden: no
-    sql: DATEDIFF(DAY, CURRENT_DATE, ${first_date_in_period}) ;;
+    sql: DATEDIFF(DAY, ${first_date_in_period}, CURRENT_DATE) ;;
     # convert_tz: no
   }
 
@@ -85,9 +85,9 @@ view: +aws_billing {
     view_label: "Period over Period"
     type: number
     sql: CASE WHEN ${period_selected} = 'This {% parameter period %} to Date'
-          THEN DATEDIFF(DAY, ${aws_billing.usage_start_date}, ${first_date_in_period})
+          THEN DATEDIFF(DAY, ${first_date_in_period}, ${aws_billing.usage_start_date})
           WHEN ${period_selected} = 'Prior {% parameter period %} to Date'
-          THEN DATEDIFF(DAY, ${aws_billing.usage_start_date}, ${first_date_in_prior_period})
+          THEN DATEDIFF(DAY, ${first_date_in_prior_period}, ${aws_billing.usage_start_date})
           ELSE NULL END;;
   }
 
