@@ -11,10 +11,10 @@
       "value_constraint": "connection"
     },
     "AWS_SCHEMA_NAME": {
-      "label": "Azure Billing Schema"
+      "label": "AWS Billing Export Schema"
     },
     "AWS_TABLE_NAME": {
-      "label": "Azure Billing Table"
+      "label": "AWS Billing Export Table"
     }
   },
   "models": [

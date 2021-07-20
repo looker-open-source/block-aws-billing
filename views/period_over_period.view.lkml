@@ -31,7 +31,7 @@ view: +aws_billing {
     view_label: "Period over Period"
     type: date
     hidden: no
-    sql: DATE_TRUNC(CURRENT_DATE(), {% parameter period %});;
+    sql: DATE_TRUNC('{% parameter period %}', CURRENT_DATE);;
     convert_tz: no
     datatype: date
   }
@@ -41,7 +41,7 @@ view: +aws_billing {
     view_label: "Period over Period"
     type: number
     hidden: no
-    sql: DATE_DIFF(CURRENT_DATE(),${first_date_in_period}, DAY) ;;
+    sql: DATEDIFF(DAY, CURRENT_DATE, ${first_date_in_period}) ;;
     # convert_tz: no
   }
 
@@ -50,7 +50,7 @@ view: +aws_billing {
     view_label: "Period over Period"
     type: date
     hidden: no
-    sql: DATE_TRUNC(DATE_ADD(CURRENT_DATE(), INTERVAL -1 {% parameter period %}),{% parameter period %});;
+    sql: DATE_TRUNC('{% parameter period %}', DATEADD({% parameter period %}, -1, CURRENT_DATE));;
     convert_tz: no
     datatype: date
   }
@@ -60,7 +60,7 @@ view: +aws_billing {
     view_label: "Period over Period"
     type: date
     hidden: no
-    sql: DATE_ADD(${first_date_in_prior_period}, INTERVAL ${days_in_period} DAY) ;;
+    sql: DATEADD(DAY, ${days_in_period}, ${first_date_in_prior_period}) ;;
     convert_tz: no
     datatype: date
   }
@@ -85,9 +85,9 @@ view: +aws_billing {
     view_label: "Period over Period"
     type: number
     sql: CASE WHEN ${period_selected} = 'This {% parameter period %} to Date'
-          THEN DATE_DIFF(${aws_billing.usage_start_date}, ${first_date_in_period}, DAY)
+          THEN DATEDIFF(DAY, ${aws_billing.usage_start_date}, ${first_date_in_period})
           WHEN ${period_selected} = 'Prior {% parameter period %} to Date'
-          THEN DATE_DIFF(${aws_billing.usage_start_date}, ${first_date_in_prior_period}, DAY)
+          THEN DATEDIFF(DAY, ${aws_billing.usage_start_date}, ${first_date_in_prior_period})
           ELSE NULL END;;
   }
 

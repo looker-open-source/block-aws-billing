@@ -2,18 +2,11 @@ view: aws_billing {
   derived_table: {
     sql:
       select
-        CONCAT(CAST(lineItem_UsageStartDate as STRING),'|', CAST(row_number() over (partition by lineItem_UsageStartDate ) as STRING)) as id,
+        CONCAT(CAST(usage_start_date as STRING),'|', CAST(row_number() over (partition by usage_start_date ) as STRING)) as id,
         --row_number() over () as id,
         a.*
       from
-        `@{AWS_SCHEMA_NAME}.@{AWS_TABLE_NAME}` as a;;
-      #   WHERE {% condition usage_start_date %}  TIMESTAMP(_PARTITIONDATE) {% endcondition %} ;;
-      # persist_for: "24 hours"
-    }
-
-    dimension_group: partition {
-      type: time
-      sql: ${TABLE}._PARTITIONDATE  ;;
+        @{AWS_SCHEMA_NAME}.@{AWS_TABLE_NAME} as a;;
     }
 
     dimension: cloud {
@@ -35,19 +28,19 @@ view: aws_billing {
 
     dimension: availability_zone {
       type: string
-      sql: ${TABLE}.lineItem_AvailabilityZone ;;
+      sql: ${TABLE}.availability_zone ;;
     }
 
     dimension: blended_rate {
       group_label: "Rates"
       type: number
-      sql: ${TABLE}.lineItem_BlendedRate ;;
+      sql: ${TABLE}.blended_rate ;;
     }
 
-    dimension:blended_cost {
+    dimension: blended_cost {
       type: number
       hidden: yes
-      sql: ${TABLE}.lineItem_BlendedCost*200 ;;
+      sql: ${TABLE}.blended_cost ;;
     }
 
     measure: total_blended_cost {
@@ -111,13 +104,13 @@ view: aws_billing {
     dimension:unblended_rate {
       group_label: "Rates"
       type: number
-      sql: ${TABLE}.lineItem_UnblendedRate ;;
+      sql: ${TABLE}.unblended_rate ;;
     }
 
     dimension:unblended_cost {
       hidden: yes
       type: number
-      sql: ${TABLE}.lineItem_UnblendedCost*200 ;;
+      sql: ${TABLE}.unblended_cost ;;
     }
 
     measure: total_unblended_cost {
@@ -152,83 +145,82 @@ view: aws_billing {
     dimension: invoice_id {
       group_label: "IDs"
       type: string
-      sql: ${TABLE}.bill_InvoiceId ;;
+      sql: ${TABLE}.invoice_id ;;
     }
 
     dimension: item_description {
       type: string
-      sql: ${TABLE}.lineItem_LineItemDescription ;;
+      sql: ${TABLE}.item_description ;;
     }
 
     dimension: linked_account_id {
       group_label: "IDs"
       type: number
-      sql: ${TABLE}.lineItem_UsageAccountId ;;
+      sql: ${TABLE}.linked_account_id ;;
 
     }
     dimension: operation {
       type: string
-      sql: ${TABLE}.lineItem_Operation ;;
+      sql: ${TABLE}.operation ;;
     }
 
     dimension: payer_account_id {
       group_label: "IDs"
       type: number
-      sql: ${TABLE}.lineItem_PayerAccountId ;;
+      sql: ${TABLE}.payer_account_id ;;
     }
 
     dimension: pricing_plan_id {
       group_label: "IDs"
       type: number
-      sql: ${TABLE}.lineItem_PricingPlanId ;;
+      sql: ${TABLE}.pricing_plan_id ;;
     }
 
     dimension: product_name {
       type: string
-      sql: ${TABLE}.product_ProductName ;;
+      sql: ${TABLE}.product_name ;;
       drill_fields: [linked_account_id]
     }
 
     dimension: rate {
       group_label: "Rates"
       type: number
-      sql: ${TABLE}.lineItem_Rate ;;
+      sql: ${TABLE}.rate ;;
     }
 
     dimension: rate_id {
       group_label: "IDs"
       type: number
-      sql: ${TABLE}.lineItem_RateId ;;
+      sql: ${TABLE}.rate_id ;;
     }
 
     dimension: record_id {
       group_label: "IDs"
       type: string
-      sql: ${TABLE}.lineItem_RecordId ;;
+      sql: ${TABLE}.record_id ;;
     }
 
     dimension: record_type {
       group_label: "IDs"
       type: string
-      sql: ${TABLE}.lineItem_RecordType ;;
+      sql: ${TABLE}.record_type ;;
     }
 
     dimension: reserved_instance {
       type: string
-      # sql: CAST(${TABLE}.lineItem_ReservedInstance as STRING) ;;
-      sql: CASE WHEN ${TABLE}.reservation_SubscriptionId IS NULL THEN 'false' ELSE 'true' END;;
+      sql: CASE WHEN ${TABLE}.reserved_instance IS NULL THEN 'false' ELSE 'true' END;;
     }
 
     dimension: resource_id {
       group_label: "IDs"
       type: string
-      sql: ${TABLE}.lineItem_ResourceId ;;
+      sql: ${TABLE}.resource_id ;;
     }
 
     dimension: subscription_id {
       group_label: "IDs"
       type: number
-      sql: ${TABLE}.lineItem_SubscriptionId ;;
+      sql: ${TABLE}.subscription_id ;;
     }
 
     dimension_group: usage_end {
@@ -243,13 +235,13 @@ view: aws_billing {
         year
       ]
       convert_tz: no
-      sql: ${TABLE}.lineItem_UsageEndDate  ;;
+      sql: ${TABLE}.usage_end_date  ;;
     }
 
     dimension: usage_quantity {
       group_label: "Usage"
       type: number
-      sql: ${TABLE}.lineItem_UsageQuantity ;;
+      sql: ${TABLE}.usage_quantity ;;
     }
 
     dimension_group: usage_start {
@@ -265,25 +257,25 @@ view: aws_billing {
         month_name
       ]
       convert_tz: no
-      sql: ${TABLE}.lineItem_UsageStartDate  ;;
+      sql: ${TABLE}.usage_start_date  ;;
     }
 
     dimension: usage_type {
       group_label: "Usage"
       type: string
-      sql: ${TABLE}.lineItem_UsageType ;;
+      sql: ${TABLE}.usage_type ;;
     }
 
     dimension: user_cost_category {
       group_label: "User"
       type:  string
-      sql:${TABLE}.lineItem_UserCostCategory ;;
+      sql:${TABLE}.user_cost_category ;;
     }
 
     dimension: user_name {
       group_label: "User"
       type:  string
-      sql:${TABLE}.lineItem_UserName ;;
+      sql:${TABLE}.user_name ;;
     }
 
     measure: count {
