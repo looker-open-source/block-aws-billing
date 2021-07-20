@@ -5,7 +5,7 @@
   elements:
   - title: YEAR OVER YEAR SPEND
     name: YEAR OVER YEAR SPEND
-    model: aws_billing
+    model: aws_billing_block
     explore: aws_billing
     type: looker_line
     fields: [aws_billing.usage_start_month_name, aws_billing.usage_start_year, aws_billing.total_blended_cost]
@@ -89,7 +89,7 @@
     height: 8
   - title: YTD Costs
     name: YTD Costs
-    model: aws_billing
+    model: aws_billing_block
     explore: aws_billing
     type: single_value
     fields: [aws_billing.period_selected, aws_billing.total_blended_cost]
@@ -155,7 +155,7 @@
     height: 2
   - title: MTD Costs
     name: MTD Costs
-    model: aws_billing
+    model: aws_billing_block
     explore: aws_billing
     type: single_value
     fields: [aws_billing.period_selected, aws_billing.total_blended_cost]
@@ -221,7 +221,7 @@
     height: 2
   - title: WTD Costs
     name: WTD Costs
-    model: aws_billing
+    model: aws_billing_block
     explore: aws_billing
     type: single_value
     fields: [aws_billing.period_selected, aws_billing.total_blended_cost]
@@ -287,7 +287,7 @@
     height: 2
   - title: QTD Costs
     name: QTD Costs
-    model: aws_billing
+    model: aws_billing_block
     explore: aws_billing
     type: single_value
     fields: [aws_billing.period_selected, aws_billing.total_blended_cost]
@@ -362,7 +362,7 @@
     height: 2
   - title: RESERVED VS ONDEMAND INSTANCES
     name: RESERVED VS ONDEMAND INSTANCES
-    model: aws_billing
+    model: aws_billing_block
     explore: aws_billing
     type: looker_pie
     fields: [aws_billing.reserved_instance, aws_billing.total_blended_cost]
@@ -422,7 +422,7 @@
     height: 7
   - title: USAGE TYPE
     name: USAGE TYPE
-    model: aws_billing
+    model: aws_billing_block
     explore: aws_billing
     type: looker_grid
     fields: [aws_billing.total_blended_cost, aws_billing.total_unblended_cost, aws_billing.average_cost_per_month,
@@ -526,7 +526,7 @@
     height: 2
   - title: RESERVED VS ONDEMAND INSTANCES BY MONTH
     name: RESERVED VS ONDEMAND INSTANCES BY MONTH
-    model: aws_billing
+    model: aws_billing_block
     explore: aws_billing
     type: looker_column
     fields: [aws_billing.usage_start_month, aws_billing.total_blended_cost, aws_billing.total_blended_cost_non_reserved,
@@ -609,7 +609,7 @@
     height: 7
   - title: TOP BILLED RESOURCES
     name: TOP BILLED RESOURCES
-    model: aws_billing
+    model: aws_billing_block
     explore: aws_billing
     type: looker_waterfall
     fields: [aws_billing.total_blended_cost, aws_billing.resource_id]
@@ -673,7 +673,7 @@
     height: 7
   - title: NON AFFILIATED COSTS
     name: NON AFFILIATED COSTS
-    model: aws_billing
+    model: aws_billing_block
     explore: aws_billing
     type: single_value
     fields: [aws_billing.total_blended_cost, aws_billing.resource_id]
@@ -746,7 +746,7 @@
     height: 7
   - title: AVAILABILITY REGION
     name: AVAILABILITY REGION
-    model: aws_billing
+    model: aws_billing_block
     explore: aws_billing
     type: looker_grid
     fields: [aws_billing.total_blended_cost, aws_billing.total_unblended_cost, aws_billing.average_cost_per_month,
@@ -833,7 +833,7 @@
     height: 5
   - title: LINKED ACCOUNTS
     name: LINKED ACCOUNTS
-    model: aws_billing
+    model: aws_billing_block
     explore: aws_billing
     type: looker_grid
     fields: [aws_billing.total_blended_cost, aws_billing.total_unblended_cost, aws_billing.average_cost_per_month,
@@ -919,7 +919,7 @@
     height: 5
   - title: SERVICE AREA
     name: SERVICE AREA
-    model: aws_billing
+    model: aws_billing_block
     explore: aws_billing
     type: looker_grid
     fields: [aws_billing.total_blended_cost, aws_billing.total_unblended_cost, aws_billing.average_cost_per_month,
@@ -1014,7 +1014,7 @@
       type: relative_timeframes
       display: inline
       options: []
-    model: aws_billing
+    model: aws_billing_block
     explore: aws_billing
     listens_to_filters: []
     field: aws_billing.usage_start_date
@@ -1028,7 +1028,7 @@
       type: tag_list
       display: popover
       options: []
-    model: aws_billing
+    model: aws_billing_block
     explore: aws_billing
     listens_to_filters: []
     field: aws_billing.product_name
@@ -1042,7 +1042,7 @@
       type: tag_list
       display: popover
       options: []
-    model: aws_billing
+    model: aws_billing_block
     explore: aws_billing
     listens_to_filters: []
     field: aws_billing.resource_id

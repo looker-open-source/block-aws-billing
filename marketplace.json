@@ -19,7 +19,7 @@
   },
   "models": [
     {
-      "name": "aws_billing",
+      "name": "aws_billing_block",
       "connection_constant": "AWS_BILLING_CONNECTION"
     }
   ]
