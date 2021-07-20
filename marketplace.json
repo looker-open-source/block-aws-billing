@@ -1,0 +1,26 @@
+{
+  "label": "AWS Cloud Billing",
+  "category_label": "Models",
+  "branding": {
+    "image_uri": "https://wwwstatic-a.lookercdn.com/blocks/logos/aws.png",
+    "tagline": "TODO"
+  },
+  "constants": {
+    "AWS_BILLING_CONNECTION": {
+      "label": "Connection Name",
+      "value_constraint": "connection"
+    },
+    "AWS_SCHEMA_NAME": {
+      "label": "Azure Billing Schema"
+    },
+    "AWS_TABLE_NAME": {
+      "label": "Azure Billing Table"
+    }
+  },
+  "models": [
+    {
+      "name": "aws_billing",
+      "connection_constant": "AWS_BILLING_CONNECTION"
+    }
+  ]
+}

@@ -79,7 +79,7 @@ view: aws_billing {
       }
       link: {
         label: "AWS Summary Dashboard"
-        url: "{{link}}/dashboards/aws_billing::aws_summary"
+        url: "/dashboards/aws_billing::aws_summary"
         icon_url: "https://www.amazon.com/favicon.ico"
       }
     }
