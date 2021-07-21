@@ -3,7 +3,7 @@
   "category_label": "Models",
   "branding": {
     "image_uri": "https://wwwstatic-a.lookercdn.com/blocks/logos/aws.png",
-    "tagline": "TODO"
+    "tagline": "Connect directly to your billing data in AWS to provide a consolidated reporting view of cloud spend."
   },
   "constants": {
     "AWS_BILLING_CONNECTION": {
