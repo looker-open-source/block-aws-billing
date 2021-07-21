@@ -30,10 +30,10 @@ view: +aws_billing {
   dimension: first_date_in_period {
     view_label: "Period over Period"
     type: date
+    datatype: date
     hidden: no
     sql: DATE_TRUNC('{% parameter period %}', CURRENT_DATE);;
     convert_tz: no
-    datatype: date
   }
 
   #Now get the total number of days in the period
@@ -41,7 +41,7 @@ view: +aws_billing {
     view_label: "Period over Period"
     type: number
     hidden: no
-    sql: DATEDIFF(DAY, ${first_date_in_period}, CURRENT_DATE) ;;
+    sql: DATE_DIFF('DAY', ${first_date_in_period}, CURRENT_DATE) ;;
     # convert_tz: no
   }
 
@@ -49,20 +49,20 @@ view: +aws_billing {
   dimension: first_date_in_prior_period {
     view_label: "Period over Period"
     type: date
-    hidden: no
-    sql: DATE_TRUNC('{% parameter period %}', DATEADD({% parameter period %}, -1, CURRENT_DATE));;
-    convert_tz: no
     datatype: date
+    hidden: no
+    sql: DATE_TRUNC('{% parameter period %}', DATE_ADD('{% parameter period %}', -1, CURRENT_DATE));;
+    convert_tz: no
   }
 
   #Now get the last date in the prior period
   dimension: last_date_in_prior_period {
     view_label: "Period over Period"
     type: date
-    hidden: no
-    sql: DATEADD(DAY, ${days_in_period}, ${first_date_in_prior_period}) ;;
-    convert_tz: no
     datatype: date
+    hidden: no
+    sql: DATE_ADD('DAY', ${days_in_period}, ${first_date_in_prior_period}) ;;
+    convert_tz: no
   }
 
   # Now figure out which period each date belongs in
@@ -85,9 +85,9 @@ view: +aws_billing {
     view_label: "Period over Period"
     type: number
     sql: CASE WHEN ${period_selected} = 'This {% parameter period %} to Date'
-          THEN DATEDIFF(DAY, ${first_date_in_period}, ${aws_billing.usage_start_date})
+          THEN DATE_DIFF('DAY', ${first_date_in_period}, ${aws_billing.usage_start_date})
           WHEN ${period_selected} = 'Prior {% parameter period %} to Date'
-          THEN DATEDIFF(DAY, ${first_date_in_prior_period}, ${aws_billing.usage_start_date})
+          THEN DATE_DIFF('DAY', ${first_date_in_prior_period}, ${aws_billing.usage_start_date})
           ELSE NULL END;;
   }
 
