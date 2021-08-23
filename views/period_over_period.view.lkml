@@ -23,7 +23,7 @@ view: +aws_billing {
       label: "Year to Date"
       value: "Year"
     }
-    default_value: "Period"
+    default_value: "Week"
   }
 
   # To get start date we need to get either first day of the year, month or quarter
@@ -41,7 +41,7 @@ view: +aws_billing {
     view_label: "Period over Period"
     type: number
     hidden: no
-    sql: DATE_DIFF('DAY', ${first_date_in_period}, CURRENT_DATE) ;;
+    sql: DATE_DIFF('DAY', CAST(${first_date_in_period} as DATE), CURRENT_DATE) ;;
     # convert_tz: no
   }
 
@@ -61,7 +61,7 @@ view: +aws_billing {
     type: date
     datatype: date
     hidden: no
-    sql: DATE_ADD('DAY', ${days_in_period}, ${first_date_in_prior_period}) ;;
+    sql: DATE_ADD('DAY', ${days_in_period}, CAST(${first_date_in_prior_period} as DATE)) ;;
     convert_tz: no
   }
 
@@ -85,10 +85,10 @@ view: +aws_billing {
     view_label: "Period over Period"
     type: number
     sql: CASE WHEN ${period_selected} = 'This {% parameter period %} to Date'
-          THEN DATE_DIFF('DAY', ${first_date_in_period}, ${aws_billing.usage_start_date})
-          WHEN ${period_selected} = 'Prior {% parameter period %} to Date'
-          THEN DATE_DIFF('DAY', ${first_date_in_prior_period}, ${aws_billing.usage_start_date})
-          ELSE NULL END;;
+          THEN DATE_DIFF('DAY', CAST(${first_date_in_period} AS DATE), CAST(${aws_billing.usage_start_date} as DATE))
+        WHEN ${period_selected} = 'Prior {% parameter period %} to Date'
+          THEN DATE_DIFF('DAY', CAST(${first_date_in_prior_period} AS DATE), CAST(${aws_billing.usage_start_date} as DATE))
+        ELSE NULL END;;
   }
 
 

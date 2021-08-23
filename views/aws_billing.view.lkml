@@ -1,13 +1,13 @@
 view: aws_billing {
   derived_table: {
-    sql:
-      select
-        CONCAT(CAST(usage_start_date as STRING),'|', CAST(row_number() over (partition by usage_start_date ) as STRING)) as id,
-        --row_number() over () as id,
-        a.*
-      from
+      sql:
+        select
+          CONCAT(CAST(line_item_usage_start_date as VARCHAR),'|', CAST(row_number() over (partition by line_item_usage_start_date ) as VARCHAR)) as id,
+          --row_number() over () as id,
+          a.*
+        from
         @{AWS_SCHEMA_NAME}.@{AWS_TABLE_NAME} as a;;
-    }
+  }
 
     dimension: cloud {
       type: string
@@ -28,19 +28,19 @@ view: aws_billing {
 
     dimension: availability_zone {
       type: string
-      sql: ${TABLE}.availability_zone ;;
+      sql: ${TABLE}.line_item_availability_zone ;;
     }
 
     dimension: blended_rate {
       group_label: "Rates"
       type: number
-      sql: ${TABLE}.blended_rate ;;
+      sql: ${TABLE}.line_item_blended_rate ;;
     }
 
     dimension: blended_cost {
       type: number
       hidden: yes
-      sql: ${TABLE}.blended_cost ;;
+      sql: ${TABLE}.line_item_blended_cost ;;
     }
 
     measure: total_blended_cost {
@@ -101,16 +101,16 @@ view: aws_billing {
       }
     }
 
-    dimension:unblended_rate {
+    dimension: unblended_rate {
       group_label: "Rates"
       type: number
-      sql: ${TABLE}.unblended_rate ;;
+      sql: ${TABLE}.line_item_unblended_rate ;;
     }
 
-    dimension:unblended_cost {
+    dimension: unblended_cost {
       hidden: yes
       type: number
-      sql: ${TABLE}.unblended_cost ;;
+      sql: ${TABLE}.line_item_unblended_cost ;;
     }
 
     measure: total_unblended_cost {
@@ -145,82 +145,84 @@ view: aws_billing {
     dimension: invoice_id {
       group_label: "IDs"
       type: string
-      sql: ${TABLE}.invoice_id ;;
+      sql: ${TABLE}.bill_invoice_id ;;
     }
 
     dimension: item_description {
       type: string
-      sql: ${TABLE}.item_description ;;
+      sql: ${TABLE}.line_item_line_item_description ;;
     }
 
     dimension: linked_account_id {
       group_label: "IDs"
       type: number
-      sql: ${TABLE}.linked_account_id ;;
-
+      sql: ${TABLE}.line_item_usage_account_id ;;
     }
     dimension: operation {
       type: string
-      sql: ${TABLE}.operation ;;
+      sql: ${TABLE}.line_item_operation ;;
     }
 
     dimension: payer_account_id {
       group_label: "IDs"
       type: number
-      sql: ${TABLE}.payer_account_id ;;
+      sql: ${TABLE}.bill_payer_account_id ;;
     }
 
     dimension: pricing_plan_id {
       group_label: "IDs"
       type: number
+      hidden: yes
       sql: ${TABLE}.pricing_plan_id ;;
     }
 
     dimension: product_name {
       type: string
-      sql: ${TABLE}.product_name ;;
+      sql: ${TABLE}.product_product_name ;;
       drill_fields: [linked_account_id]
     }
 
     dimension: rate {
       group_label: "Rates"
       type: number
+      hidden: yes
       sql: ${TABLE}.rate ;;
     }
 
     dimension: rate_id {
       group_label: "IDs"
       type: number
-      sql: ${TABLE}.rate_id ;;
+      sql: ${TABLE}.pricing_rate_id ;;
     }
 
     dimension: record_id {
       group_label: "IDs"
       type: string
-      sql: ${TABLE}.record_id ;;
+      sql: CONCAT(CAST(${TABLE}.identity_line_item_id as VARCHAR),CAST(${TABLE}.identity_time_interval as VARCHAR),CAST(${TABLE}.bill_bill_type as VARCHAR)) ;;
     }
 
     dimension: record_type {
       group_label: "IDs"
       type: string
+      hidden: yes
       sql: ${TABLE}.record_type ;;
     }
 
     dimension: reserved_instance {
       type: string
-      sql: CASE WHEN ${TABLE}.reserved_instance IS NULL THEN 'false' ELSE 'true' END;;
+      sql: CASE WHEN ${TABLE}.line_item_line_item_type = 'DiscountedUsage' then 'true' else 'false' end;;
     }
 
     dimension: resource_id {
       group_label: "IDs"
       type: string
-      sql: ${TABLE}.resource_id ;;
+      sql: ${TABLE}.line_item_resource_id ;;
     }
 
     dimension: subscription_id {
       group_label: "IDs"
       type: number
-      sql: ${TABLE}.subscription_id ;;
+      sql: ${TABLE}.reservation_subscription_id ;;
     }
 
     dimension_group: usage_end {
@@ -235,13 +237,13 @@ view: aws_billing {
         year
       ]
       convert_tz: no
-      sql: ${TABLE}.usage_end_date  ;;
+      sql: ${TABLE}.line_item_usage_end_date ;;
     }
 
     dimension: usage_quantity {
       group_label: "Usage"
       type: number
-      sql: ${TABLE}.usage_quantity ;;
+      sql: ${TABLE}.line_item_usage_amount ;;
     }
 
     dimension_group: usage_start {
@@ -257,24 +259,45 @@ view: aws_billing {
         month_name
       ]
       convert_tz: no
-      sql: ${TABLE}.usage_start_date  ;;
+      sql: ${TABLE}.line_item_usage_start_date ;;
+    }
+
+    dimension: month {
+      type: string
+      hidden: yes
+      sql: CASE WHEN LENGTH(CAST(${TABLE}.month as VARCHAR))=1
+            then CONCAT('0',CAST(${TABLE}.month as VARCHAR))
+            else CAST(${TABLE}.month as VARCHAR) END ;;
+    }
+
+    dimension: year {
+      type: string
+      hidden: yes
+      sql: CAST(${TABLE}.year as VARCHAR) ;;
+    }
+
+    dimension: invoice_month {
+      type: date_month
+      sql: DATE_PARSE(CONCAT(${year},'-',${month}),'%Y-%m') ;;
     }
 
     dimension: usage_type {
       group_label: "Usage"
       type: string
-      sql: ${TABLE}.usage_type ;;
+      sql: ${TABLE}.line_item_usage_type ;;
     }
 
     dimension: user_cost_category {
       group_label: "User"
       type:  string
+      hidden: yes
       sql:${TABLE}.user_cost_category ;;
     }
 
     dimension: user_name {
       group_label: "User"
       type:  string
+      hidden: yes
       sql:${TABLE}.user_name ;;
     }
 
@@ -1363,7 +1386,7 @@ view: aws_billing {
 #     dimension:blended_cost {
 #       type: number
 #       hidden: yes
-#       sql: ${TABLE}.lineItem_BlendedCost*200 ;;
+#       sql: ${TABLE}.lineItem_BlendedCost ;;
 #     }
 
 #     measure: total_blended_cost {
@@ -1433,7 +1456,7 @@ view: aws_billing {
 #     dimension:unblended_cost {
 #       hidden: yes
 #       type: number
-#       sql: ${TABLE}.lineItem_UnblendedCost*200 ;;
+#       sql: ${TABLE}.lineItem_UnblendedCost ;;
 #     }
 
 #     measure: total_unblended_cost {
