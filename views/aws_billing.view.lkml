@@ -1,11 +1,11 @@
 view: aws_billing {
   derived_table: {
       sql:
-        select
-          CONCAT(CAST(line_item_usage_start_date as VARCHAR),'|', CAST(row_number() over (partition by line_item_usage_start_date ) as VARCHAR)) as id,
-          --row_number() over () as id,
-          a.*
-        from
+      select
+        CONCAT(CAST(line_item_usage_start_date as VARCHAR),'|', CAST(row_number() over (partition by line_item_usage_start_date ) as VARCHAR)) as id,
+        --row_number() over () as id,
+        a.*
+      from
         @{AWS_SCHEMA_NAME}.@{AWS_TABLE_NAME} as a;;
   }
 
