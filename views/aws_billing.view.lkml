@@ -155,7 +155,7 @@ view: aws_billing {
 
     dimension: linked_account_id {
       group_label: "IDs"
-      type: number
+      type: string
       sql: ${TABLE}.line_item_usage_account_id ;;
     }
     dimension: operation {
