@@ -7,7 +7,7 @@ marketplace_ref: {
   listing: "aws-billing"
   version: "1.0.1"
   models: ["aws_billing_block"]
-  override_constant: AWS_BILLING_CONNECTION { value:"mw-alpha-cloud-usage" }
+  override_constant: AWS_BILLING_CONNECTION { value:"datalake" }
   override_constant: AWS_SCHEMA_NAME { value:"cloud_cost_final" }
   override_constant: AWS_TABLE_NAME { value:"base_table_date_impute_aws" }
 }
