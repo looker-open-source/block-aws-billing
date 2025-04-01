@@ -201,13 +201,6 @@ view: aws_billing {
       sql: CONCAT(CAST(${TABLE}.identity_line_item_id as VARCHAR),CAST(${TABLE}.identity_time_interval as VARCHAR),CAST(${TABLE}.bill_bill_type as VARCHAR)) ;;
     }
 
-    dimension: record_type {
-      group_label: "IDs"
-      type: string
-      hidden: yes
-      sql: ${TABLE}.record_type ;;
-    }
-
     dimension: reserved_instance {
       type: string
       sql: CASE WHEN ${TABLE}.line_item_line_item_type = 'DiscountedUsage' then 'true' else 'false' end;;
@@ -532,7 +525,7 @@ view: aws_billing {
 
 
     set: detail {
-      fields: [product_name,invoice_id,item_description,record_type,record_id,subscription_id,resource_id,total_unblended_cost,total_blended_cost]
+      fields: [product_name,invoice_id,item_description,record_id,subscription_id,resource_id,total_unblended_cost,total_blended_cost]
     }
   }
 
