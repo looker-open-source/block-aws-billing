@@ -1,0 +1,26 @@
+{
+  "label": "Cloud Cost Management: AWS",
+  "category_label": "Models",
+  "branding": {
+    "image_uri": "https://wwwstatic-a.lookercdn.com/blocks/logos/aws.png",
+    "tagline": "Connect directly to your billing data in AWS to provide a consolidated reporting view of cloud spend."
+  },
+  "constants": {
+    "AWS_BILLING_CONNECTION": {
+      "label": "Connection Name",
+      "value_constraint": "connection"
+    },
+    "AWS_SCHEMA_NAME": {
+      "label": "AWS Billing Export Schema"
+    },
+    "AWS_TABLE_NAME": {
+      "label": "AWS Billing Export Table"
+    }
+  },
+  "models": [
+    {
+      "name": "aws_billing_block",
+      "connection_constant": "AWS_BILLING_CONNECTION"
+    }
+  ]
+}
